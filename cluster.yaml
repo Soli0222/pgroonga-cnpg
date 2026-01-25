@@ -1,0 +1,9 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: cluster-example
+spec:
+  imageName: ghcr.io/soli0222/pgroonga-cnpg:4.0.5-alpine-18
+  instances: 3
+  storage:
+    size: 1Gi
