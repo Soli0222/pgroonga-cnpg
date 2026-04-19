@@ -1,4 +1,4 @@
-FROM groonga/pgroonga:4.0.5-alpine-18
+FROM groonga/pgroonga:4.0.6-alpine-18
 
 USER root
 
