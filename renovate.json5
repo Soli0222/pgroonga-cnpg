@@ -18,7 +18,8 @@
   prCreation: 'immediate',
   rebaseWhen: 'auto',
   dependencyDashboard: true,
-  ignoreTests: true,
+  ignoreTests: false,
+  platformAutomerge: false,
   vulnerabilityAlerts: {
     enabled: true,
     labels: [
@@ -38,7 +39,8 @@
         'dockerfile',
       ],
       commitMessageTopic: 'Docker {{depName}}',
-      automerge: false,
+      matchPackageNames: ['groonga/pgroonga'],
+      automerge: true,
     },
   ],
 }
