@@ -57,8 +57,11 @@ PGroongaインデックスを使った日本語全文検索を確認します。
 ローカルではDocker・kind・kubectlが必要です。テスト専用クラスタは終了時に削除されます。
 
 ```bash
-docker build -t pgroonga-cnpg-test:18 .
-bash tests/cnpg-e2e.sh pgroonga-cnpg-test:18 4.1.0 18
+tag=$(python3 scripts/release.py metadata | sed -n 's/^tag=//p')
+version=${tag%%-alpine-*}
+pg_major=${tag##*-}
+docker build -t "pgroonga-cnpg-test:$pg_major" .
+bash tests/cnpg-e2e.sh "pgroonga-cnpg-test:$pg_major" "$version" "$pg_major"
 ```
 
 ## ファイル構成
