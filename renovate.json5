@@ -23,7 +23,7 @@
   customManagers: [
     {
       customType: 'regex',
-      managerFilePatterns: ['/^tests/e2e\\.env$/'],
+      managerFilePatterns: ['.github/e2e.env'],
       matchStrings: [
         '# renovate: datasource=github-releases depName=(?<depName>[^\\s]+)\\s+[A-Z_]+=(?<currentValue>\\d+\\.\\d+\\.\\d+)',
       ],
@@ -33,7 +33,7 @@
     },
     {
       customType: 'regex',
-      managerFilePatterns: ['/^tests/e2e\\.env$/'],
+      managerFilePatterns: ['.github/e2e.env'],
       matchStrings: [
         '# renovate: datasource=docker depName=(?<depName>[^\\s]+)\\s+[A-Z_]+=[^\\s:]+:(?<currentValue>v\\d+\\.\\d+\\.\\d+)(?:@(?<currentDigest>sha256:[a-f0-9]{64}))?',
       ],
@@ -50,7 +50,7 @@
   packageRules: [
     {
       matchManagers: ['custom.regex'],
-      matchFileNames: ['tests/e2e.env'],
+      matchFileNames: ['.github/e2e.env'],
       groupName: 'CNPG E2E dependencies',
       automerge: true,
       pinDigests: true,

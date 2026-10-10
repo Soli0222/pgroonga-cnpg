@@ -6,8 +6,8 @@ expected_version=${2:?Expected PGroonga version required}
 pg_major=${3:?Expected PostgreSQL major required}
 kind_cluster="pgroonga-e2e-${RANDOM}"
 script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
-# shellcheck source=tests/e2e.env
-source "$script_dir/e2e.env"
+# shellcheck source=.github/e2e.env
+source "$script_dir/../.github/e2e.env"
 export KUBECONFIG
 KUBECONFIG=$(mktemp)
 
@@ -27,7 +27,7 @@ cleanup() {
 trap cleanup EXIT
 
 test "$(kind version | awk '{print $2}')" = "v${KIND_VERSION}" || {
-  echo "Install kind v${KIND_VERSION} to match tests/e2e.env" >&2
+  echo "Install kind v${KIND_VERSION} to match .github/e2e.env" >&2
   exit 1
 }
 kind create cluster --name "$kind_cluster" --image "$KIND_NODE_IMAGE" --wait 180s

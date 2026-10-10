@@ -87,7 +87,7 @@ jobs:
         env:
           ARCH: ${{ matrix.arch }}
         run: |
-          source tests/e2e.env
+          source .github/e2e.env
           curl -fsSL --retry 3 -o /tmp/kind "https://kind.sigs.k8s.io/dl/v${KIND_VERSION}/kind-linux-${ARCH}"
           sudo install -m 755 /tmp/kind /usr/local/bin/kind
       - name: Test with CloudNativePG
