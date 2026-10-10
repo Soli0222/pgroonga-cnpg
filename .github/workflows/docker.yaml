@@ -85,10 +85,10 @@ jobs:
           cache-to: type=gha,mode=max,scope=${{ matrix.arch }}
       - name: Install kind
         env:
-          KIND_VERSION: v0.33.0
           ARCH: ${{ matrix.arch }}
         run: |
-          curl -fsSL --retry 3 -o /tmp/kind "https://kind.sigs.k8s.io/dl/${KIND_VERSION}/kind-linux-${ARCH}"
+          source .github/e2e.env
+          curl -fsSL --retry 3 -o /tmp/kind "https://kind.sigs.k8s.io/dl/v${KIND_VERSION}/kind-linux-${ARCH}"
           sudo install -m 755 /tmp/kind /usr/local/bin/kind
       - name: Test with CloudNativePG
         env:

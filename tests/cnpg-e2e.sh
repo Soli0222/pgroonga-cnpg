@@ -5,8 +5,9 @@ image=${1:?Usage: bash tests/cnpg-e2e.sh IMAGE PGROONGA_VERSION PG_MAJOR}
 expected_version=${2:?Expected PGroonga version required}
 pg_major=${3:?Expected PostgreSQL major required}
 kind_cluster="pgroonga-e2e-${RANDOM}"
-cnpg_version=1.30.1
-kind_node=kindest/node:v1.36.4@sha256:099e049362a1526b2db71494e1947aae99bd16290d7c895f2b7ea312e3cbfaed
+script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+# shellcheck source=.github/e2e.env
+source "$script_dir/../.github/e2e.env"
 export KUBECONFIG
 KUBECONFIG=$(mktemp)
 
@@ -25,9 +26,13 @@ cleanup() {
 }
 trap cleanup EXIT
 
-kind create cluster --name "$kind_cluster" --image "$kind_node" --wait 180s
+test "$(kind version | awk '{print $2}')" = "v${KIND_VERSION}" || {
+  echo "Install kind v${KIND_VERSION} to match .github/e2e.env" >&2
+  exit 1
+}
+kind create cluster --name "$kind_cluster" --image "$KIND_NODE_IMAGE" --wait 180s
 kind load docker-image "$image" --name "$kind_cluster"
-kubectl apply --server-side -f "https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/v${cnpg_version}/releases/cnpg-${cnpg_version}.yaml"
+kubectl apply --server-side -f "https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/v${CNPG_VERSION}/releases/cnpg-${CNPG_VERSION}.yaml"
 kubectl rollout status -n cnpg-system deployment/cnpg-controller-manager --timeout=180s
 kubectl apply -f - <<YAML
 apiVersion: postgresql.cnpg.io/v1
