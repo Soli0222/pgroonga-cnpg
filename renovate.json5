@@ -20,6 +20,27 @@
   dependencyDashboard: true,
   ignoreTests: false,
   platformAutomerge: false,
+  customManagers: [
+    {
+      customType: 'regex',
+      managerFilePatterns: ['/^tests/e2e\\.env$/'],
+      matchStrings: [
+        '# renovate: datasource=github-releases depName=(?<depName>[^\\s]+)\\s+[A-Z_]+=(?<currentValue>\\d+\\.\\d+\\.\\d+)',
+      ],
+      datasourceTemplate: 'github-releases',
+      versioningTemplate: 'semver',
+      extractVersionTemplate: '^v(?<version>.*)$',
+    },
+    {
+      customType: 'regex',
+      managerFilePatterns: ['/^tests/e2e\\.env$/'],
+      matchStrings: [
+        '# renovate: datasource=docker depName=(?<depName>[^\\s]+)\\s+[A-Z_]+=[^\\s:]+:(?<currentValue>v\\d+\\.\\d+\\.\\d+)(?:@(?<currentDigest>sha256:[a-f0-9]{64}))?',
+      ],
+      datasourceTemplate: 'docker',
+      versioningTemplate: 'docker',
+    },
+  ],
   vulnerabilityAlerts: {
     enabled: true,
     labels: [
@@ -27,6 +48,13 @@
     ],
   },
   packageRules: [
+    {
+      matchManagers: ['custom.regex'],
+      matchFileNames: ['tests/e2e.env'],
+      groupName: 'CNPG E2E dependencies',
+      automerge: true,
+      pinDigests: true,
+    },
     {
       matchManagers: [
         'github-actions',
