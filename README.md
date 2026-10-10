@@ -14,7 +14,9 @@ groonga/pgroonga のベースイメージでは postgres ユーザーの UID が
 
 ビルドされたイメージは [GitHub Container Registry](https://ghcr.io/soli0222/pgroonga-cnpg) で公開されています。
 
-- `ghcr.io/soli0222/pgroonga-cnpg:4.0.5-alpine-18`
+<!-- release-image:start -->
+- `ghcr.io/soli0222/pgroonga-cnpg/4.1.0-alpine:18`
+<!-- release-image:end -->
 
 ## 使用方法
 
@@ -32,6 +34,34 @@ kubectl apply -f cluster.yaml
 
 ```bash
 docker build -t pgroonga-cnpg .
+```
+
+## リリースとテスト
+
+Dockerfileのベースイメージのタグをバージョンの正本にしています。
+RenovateのPGroonga更新PRは、amd64・arm64のCNPG E2Eが成功すると自動マージされます。
+mainでは、未公開のバージョンについて次を実行します。
+
+1. 各アーキテクチャでイメージをビルドし、kind上のCNPGで検証する。
+2. 検証したイメージをGHCRに公開し、マルチアーキテクチャのタグを作成する。
+3. READMEのイメージ名、`cluster.yaml`、`CHANGELOG.md`を更新する。
+4. `X.Y.Z-alpine-PG_MAJOR`タグとGitHub Releaseを作成する。
+
+既存Releaseがある場合はテストのみ実行し、イメージを上書きしません。
+失敗したリリースはActionsの「Test and release」をmainに対して手動実行すると再試行できます。
+テスト中にmainが進んだ場合も、新しいmainに対して再実行します。
+バージョンを記載するファイルを増やす場合は、`scripts/release.py`の更新対象に追加してください。
+
+E2Eでは1インスタンスのCNPGクラスタのReady、UID/GID 26、PostgreSQLとPGroongaのバージョン、
+PGroongaインデックスを使った日本語全文検索を確認します。
+ローカルではDocker・kind・kubectlが必要です。テスト専用クラスタは終了時に削除されます。
+
+```bash
+tag=$(python3 scripts/release.py metadata | sed -n 's/^tag=//p')
+version=${tag%%-alpine-*}
+pg_major=${tag##*-}
+docker build -t "pgroonga-cnpg-test:$pg_major" .
+bash tests/cnpg-e2e.sh "pgroonga-cnpg-test:$pg_major" "$version" "$pg_major"
 ```
 
 ## ファイル構成
