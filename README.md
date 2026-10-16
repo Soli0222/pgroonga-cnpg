@@ -56,7 +56,7 @@ E2Eでは1インスタンスのCNPGクラスタのReady、UID/GID 26、PostgreSQ
 PGroongaインデックスを使った日本語全文検索を確認します。
 kind・CNPG・Kubernetesノードイメージのバージョンは`.github/e2e.env`で管理しています。
 Renovateが安定版の更新をまとめてPRにし、両アーキテクチャのE2E成功後に自動マージします。
-ノードイメージのdigestも更新対象です。E2E依存関係のみの更新では新しいリリースを作りません。
+ノードイメージは`vX.Y.Z`のバージョンタグで固定し、digestでは固定しません。E2E依存関係のみの更新では新しいリリースを作りません。
 ローカルではDocker・kubectlと、`.github/e2e.env`と同じバージョンのkindが必要です。
 テスト専用クラスタは終了時に削除されます。
 

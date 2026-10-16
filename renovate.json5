@@ -5,6 +5,7 @@
     "security:minimumReleaseAgeNpm",
     ":dependencyDashboard"
   ],
+  pinDigests: false,
   timezone: 'Asia/Tokyo',
   prConcurrentLimit: 20,
   prHourlyLimit: 10,
@@ -35,7 +36,7 @@
       customType: 'regex',
       managerFilePatterns: ['.github/e2e.env'],
       matchStrings: [
-        '# renovate: datasource=docker depName=(?<depName>[^\\s]+)\\s+[A-Z_]+=[^\\s:]+:(?<currentValue>v\\d+\\.\\d+\\.\\d+)(?:@(?<currentDigest>sha256:[a-f0-9]{64}))?',
+        '# renovate: datasource=docker depName=(?<depName>[^\\s]+)\\s+[A-Z_]+=[^\\s:]+:(?<currentValue>v\\d+\\.\\d+\\.\\d+)',
       ],
       datasourceTemplate: 'docker',
       versioningTemplate: 'docker',
@@ -53,7 +54,6 @@
       matchFileNames: ['.github/e2e.env'],
       groupName: 'CNPG E2E dependencies',
       automerge: true,
-      pinDigests: true,
     },
     {
       matchManagers: [
